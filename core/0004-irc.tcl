@@ -16,7 +16,7 @@ proc ircmain {sck} {
 			puts stdout "Server didn't like our nick, choosing a different one."
 		}
 		"NICK" {
-			tnda set "userhosts/[ndaenc [lindex $comd 2]]" [tnda get "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]"]
+			tnda set "userhosts/[ndaenc [lindex $comd 2]]" [tnda get "userhosts/[ndaenc [lindex [split $comd "!"] 0]]"]
 			tnda set "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]" ""
 			callmbinds "nick" [lindex $comd 2] "*" "* [lindex $comd 2]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex $comd 2]] "*" [lindex $comd 2]
 		}

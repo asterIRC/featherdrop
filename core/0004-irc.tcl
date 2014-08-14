@@ -117,6 +117,7 @@ proc pushmode {chan mode args} {
 
 proc alternick {nick} {
 	global alternicks botnick
+	if {![info exists alternicks]} {set alternicks 1}
 	set altechar "`[]-_^1234567890"
 	set char [string index $altechar [expr {[incr $alternicks] % [string length $altechar]}]]
 	set rut $nick

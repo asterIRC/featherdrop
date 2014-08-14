@@ -1,0 +1,20 @@
+# example.conf.1
+set pem "./featherdrop.pem"
+
+set nick "FeatherDrop"
+set bindhost "178.32.240.103"
+set username "lamest"
+
+set servers {
+	irc.umbrellix.tk:+6697
+}
+
+set botnet-nick "lamestbot"
+
+# Because unlike Eggdrop, Featherdrop parses 005,
+# there isn't any need to specify which prefixes are also @.
+# Besides, that was a bit misleading.
+
+listen 3333 all
+listen +4444 all
+

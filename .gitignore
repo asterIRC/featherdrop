@@ -1,0 +1,5 @@
+*.conf.1
+*.conf.2
+*.conf.db
+
+*.conf

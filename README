@@ -1,0 +1,53 @@
+   _____          _   _                  _                    ___ ____   ____
+  |  ___|__  __ _| |_| |__   ___ _ __ __| |_ __ ___  _ __ _  |_ _|  _ \ / ___|
+  | |_ / _ \/ _` | __| '_ \ / _ \ '__/ _` | '__/ _ \| '_ (_)  | || |_) | |
+  |  _|  __/ (_| | |_| | | |  __/ | | (_| | | | (_) | |_) |   | ||  _ <| |___
+  |_|  \___|\__,_|\__|_| |_|\___|_|  \__,_|_|  \___/| .__(_) |___|_| \_\\____|
+                                                    |_|
+      ____        _     _         ____                   _____ ____ _
+     | __ )  ___ | |_  (_)_ __   |  _ \ _   _ _ __ ___  |_   _/ ___| |
+     |  _ \ / _ \| __| | | '_ \  | |_) | | | | '__/ _ \   | || |   | |
+     | |_) | (_) | |_  | | | | | |  __/| |_| | | |  __/   | || |___| |___
+     |____/ \___/ \__| |_|_| |_| |_|    \__,_|_|  \___|   |_| \____|_____|
+
+              ___        _       ___  __  __ _    _         _
+             | __|_ _ __| |_    | __|/ _|/ _(_)__(_)___ _ _| |_
+             | _/ _` (_-<  _|_  | _||  _|  _| / _| / -_) ' \  _|_
+             |_|\__,_/__/\__(_) |___|_| |_| |_\__|_\___|_||_\__(_)
+
+                   ___                      _   _ _    _
+                  / __|___ _ __  _ __  __ _| |_(_) |__| |___
+                 | (__/ _ \ '  \| '_ \/ _` |  _| | '_ \ / -_)_
+                  \___\___/_|_|_| .__/\__,_|\__|_|_.__/_\___(_)
+                                | |
+                                |_|
+ Featherdrop has been written by j4jackj in pure Tcl to satisfy the needs of a
+                             diverse IRCer's world.
+
+ It is not better or worse than the bot it is modelled on. It is available as a
+             TclServ module as well as as a standalone client-bot.
+
+ It is light on system resources, and uses the proven Tcllib library developed
+                        by a rather kind Tcl community.
+
+ Featherdrop is compatible with Eggdrop scripts, and easy to configure. TclServ
+              is a services framework developed by j4jackj in Tcl.
+
+   You can run Featherdrop in TclServ either as a clientbot onto a different
+  network (useful for relays; this system fakes a botnet to be compatible with
+ existing scripts), or as a services clone, in which case it generates a random
+                              not-in-use numeric.
+
+ You can also run Featherdrop standalone, as described above. This has a simple
+   botnet system which allows it to link to a TclServ-Featherdrop as well as
+                              normal featherdrops.
+
+Featherdrop requires no compilation apart from that necessary to install Tcl8.5
+ if you don't already have it. Your existing Eggdrop configurations should work
+   in Featherdrop with little to no modification. Featherdrop's interface is
+largely identical to Eggdrop for the user's perspective, but Featherdrop canNOT
+    use Eggdrop userfiles. It may in a later release be able to import them,
+                           however, and export them.
+
+                        Thanks for reading this README.
+

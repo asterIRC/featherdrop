@@ -39,6 +39,10 @@ proc putloglev {lev mask msg} {
 	#puts stdout "$lev $mask $msg"
 }
 
+proc putcmdlog {args} {
+	#puts stdout "$lev $mask $msg"
+}
+
 proc ndadec {n} {
 	return [::base64::decode [string map {[ /} $n]]
 }

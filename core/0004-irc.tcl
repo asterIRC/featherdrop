@@ -95,7 +95,7 @@ proc ircmain {sck} {
 
 		"PART" {
 			set lis [tnda get "culist/[lindex $comd 2]"]
-			set lis [lreplace [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"]] [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"]] $lis]
+			set lis [lreplace $lis [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]] [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]]]
 			tnda set "culist/[lindex $comd 2]" $lis
 			callmbinds part [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [lindex $comd 0]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] [join $payload " "]
 		}

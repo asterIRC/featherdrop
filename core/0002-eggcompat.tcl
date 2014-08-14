@@ -127,6 +127,7 @@ proc onchan {nick {chan "*"}} {
 			if {$n == $nick} {return 1}
 		}
 	}
+	return 0
 }
 
 namespace eval channel {

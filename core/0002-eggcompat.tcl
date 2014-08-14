@@ -130,7 +130,7 @@ namespace eval channel {
 	proc ::channel::info {chan} {
 		set ret [list]
 		::foreach {stt val} [nda get "eggcompat/chansets/[ndaenc $chan]"] {
-			if {val} {lappend ret "+$stt"} {lappend ret "-$stt"}
+			if {$val} {lappend ret "+$stt"} {lappend ret "-$stt"}
 		}
 		return $ret
 	}

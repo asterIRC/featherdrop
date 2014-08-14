@@ -287,3 +287,4 @@ set chanfile [lindex $::argv 0].chan
 set userfile [lindex $::argv 0].user
 
 proc isbotnick {n} {return [expr {$::botnick == $n}]}
+proc ischanban {n c} {return 0}

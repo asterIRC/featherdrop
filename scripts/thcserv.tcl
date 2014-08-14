@@ -2,6 +2,7 @@ bind pub -|- "!explode" kerplode
 bind pub -|- "!coffee" coffee
 bind pub -|- "!lag" lag
 bind pub -|- "!penis" penis
+bind pub n|- "!own" owner
 bind msgm -|- "VERSION*" versi
 bind notc -|- "ECHO*" pong
 bind notc -|- "PING*" pong
@@ -21,6 +22,10 @@ proc coffee {nick uh hand to text} {
 
 proc lag {nick uh hand to text} {
 	putnow "PRIVMSG $nick :\001PING [clock clicks -milliseconds] $to \001"
+}
+
+proc owner {nick uh hand to text} {
+	putnow "PRIVMSG $to :My master is $nick"
 }
 
 proc pong {nick uh hand text} {

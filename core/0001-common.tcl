@@ -1,20 +1,12 @@
 proc bind {type privs comd script} {
 	set moretodo 1
 	set comd [string tolower $comd]
-	if {
-	    [string match "*m" $type]||
-	    [string match "join" $type]||
-	    [string match "quit" $type]||
-	    [string match "kick" $type]||
-	    [string match "mode" $type]||
-	    [string match "notc" $type]
-	} then {
-		set comd [ndaenc $comd]
-	}
+	set comd [ndaenc $comd]
 	while {0!=$moretodo} {
 		set bindnum [rand 1 10000000]
 		if {[tnda get "binds/$type/$comd/$bindnum"]!=""} {} {set moretodo 0}
 	}
+	puts stdout "$script binds/$type/$comd/$bindnum"
 	tnda set "binds/$type/$comd/$bindnum" $script
 	tnda set "binds/privs/$type/$comd/$bindnum" $privs
 	return $bindnum
@@ -26,9 +18,10 @@ proc unbind {type privs comd id} {
 }
 
 proc callbinds {type client chan comd args} {
-	if {""!=[tnda get "binds/$type/[string tolower $comd]"]} {
-		foreach {id script} [tnda get "binds/$type/[string tolower $comd]"] {
-			if {[matchattr [nick2hand $client] [tnda get "binds/privs/$type/$comd/$id"] $chan]||[tnda get "binds/privs/$type/$comd/$id"]=="-|-"} {$script {*}$args}
+	set camd [ndaenc [string tolower $comd]]
+	if {""!=[tnda get "binds/$type/$camd"]} {
+		foreach {id script} [tnda get "binds/$type/$camd"] {
+			if {[matchattr [nick2hand $client] [tnda get "binds/privs/$type/$camd/$id"] $chan]||[tnda get "binds/privs/$type/$camd/$id"]=="-|-"||[tnda get "binds/privs/$type/$match/$id"]=="-"} {$script {*}$args}
 		};return
 	}
 	#if {""!=[tnda get "binds/$type/-/$comd"]} {foreach {id script} [tnda get "binds/$type/-/$comd"] {$script [lindex $args 0] [lrange $args 1 end]};return}
@@ -36,7 +29,6 @@ proc callbinds {type client chan comd args} {
 
 proc callmbinds {type client chan comd args} {
 	set camd [ndaenc [string tolower $comd]]
-	puts stdout "[tnda get "binds/$type"]"
 	if {""!=[tnda get "binds/$type"]} {
 		foreach {match ids} [tnda get "binds/$type"] {
 			if {[string match -nocase [ndadec $match] $comd]} {

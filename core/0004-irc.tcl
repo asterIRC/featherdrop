@@ -16,7 +16,7 @@ proc ircmain {sck} {
 			puts stdout "Server didn't like our nick, choosing a different one."
 		}
 		"NICK" {
-			tnda set "userhosts/[ndaenc [lindex $comd 2]]" [tnda get "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]"]
+			tnda set "userhosts/[ndaenc [lindex $comd 2]]" [tnda get "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]"]
 			tnda set "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]" ""
 			callmbinds "nick" [lindex $comd 2] "*" "* [lindex $comd 2]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex $comd 2]] "*" [lindex $comd 2]
 		}
@@ -86,17 +86,38 @@ proc ircmain {sck} {
 				set usepar 0
 			}
 		}
+		"353" {
+			foreach {pfx mode} [tnda get "i/prefix"] {
+                                set pfxmatch($pfx) $mode
+                        }
+                        foreach {name} $payload {
+                                set no ""
+                                set nn ""
+                                foreach {nc} [split $name {}] {
+                                        if {[info exists pfxmatch($nc)]} {append no $pfxmatch($nc)} {append nn $nc}
+                                }
+                                if {$no==""} {set no "="}
+                                tnda set "culist/[ndaenc [lindex $comd 4]]" [concat [tnda get "culist/[ndaenc [lindex $comd 4]]"] $nn]
+                                tnda set "oplist/[ndaenc [lindex $comd 4]]/$nn" $no
+			}
+		}
+
+		"352" {
+			tnda set "userhosts/[ndaenc [lindex $comd 7]]" "[lindex $comd 4]@[lindex $comd 5]"
+		}
+
 		"JOIN" {
-			set lis [tnda get "culist/[lindex $comd 2]"]
+			if {[lindex [split [lindex $comd 0] "!"] 0] == $::botnick} {putq help "WHO [lindex $comd 2]"}
+			set lis [tnda get "culist/[ndaenc [lindex $comd 2]]"]
 			lappend lis [lindex [split [lindex $comd 0] "!"] 0]
-			tnda set "culist/[lindex $comd 2]" $lis
+			tnda set "culist/[ndaenc [lindex $comd 2]]" $lis
 			callmbinds join [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [lindex $comd 0]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2]
 		}
 
 		"PART" {
-			set lis [tnda get "culist/[lindex $comd 2]"]
+			set lis [tnda get "culist/[ndaenc [lindex $comd 2]]"]
 			set lis [lreplace $lis [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]] [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]]]
-			tnda set "culist/[lindex $comd 2]" $lis
+			tnda set "culist/[ndaenc [lindex $comd 2]]" $lis
 			callmbinds part [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [lindex $comd 0]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] [join $payload " "]
 		}
 

@@ -115,6 +115,20 @@ proc channels {} {
 	return $ret
 }
 
+proc onchan {nick {chan "*"}} {
+	if {"*"==$chan} {
+		foreach {chan _} [tnda get "culist"] {
+			foreach {n} $_ {
+				if {$n == $nick} {return 1}
+			}
+		}
+	} {
+		foreach {n} [tnda get "culist/$chan"] {
+			if {$n == $nick} {return 1}
+		}
+	}
+}
+
 namespace eval channel {
 	proc ::channel::add {chan {flags ""}} {
 		nda set "channels/[ndaenc $chan]/reg" 1

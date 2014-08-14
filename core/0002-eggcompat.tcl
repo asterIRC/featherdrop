@@ -127,6 +127,14 @@ namespace eval channel {
 		nda set "eggcompat/chansets/[ndaenc $chan]" [list]
 	}
 
+	proc ::channel::info {chan} {
+		set ret [list]
+		::foreach {stt val} [nda get "eggcompat/chansets/[ndaenc $chan]"] {
+			if {val} {lappend ret "+$stt"} {lappend ret "-$stt"}
+		}
+		return $ret
+	}
+
 	proc ::channel::get {chan flag} {
 		if {[::set enda [nda get "eggcompat/chansets/[ndaenc $chan]/[ndaenc [string map {+ ""} $flag]]"]]!=""} {return $enda} {return 0}
 	}

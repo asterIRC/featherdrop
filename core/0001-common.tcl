@@ -19,9 +19,10 @@ proc unbind {type privs comd id} {
 
 proc callbinds {type client chan comd args} {
 	set camd [ndaenc [string tolower $comd]]
+	global lastbind
 	if {""!=[tnda get "binds/$type/$camd"]} {
 		foreach {id script} [tnda get "binds/$type/$camd"] {
-			if {[matchattr [nick2hand $client] [tnda get "binds/privs/$type/$camd/$id"] $chan]||[tnda get "binds/privs/$type/$camd/$id"]=="-|-"||[tnda get "binds/privs/$type/$camd/$id"]=="-"} {$script {*}$args}
+			if {[matchattr [nick2hand $client] [tnda get "binds/privs/$type/$camd/$id"] $chan]||[tnda get "binds/privs/$type/$camd/$id"]=="-|-"||[tnda get "binds/privs/$type/$camd/$id"]=="-"} {$script {*}$args;set lastbind $comd}
 		};return
 	}
 	#if {""!=[tnda get "binds/$type/-/$comd"]} {foreach {id script} [tnda get "binds/$type/-/$comd"] {$script [lindex $args 0] [lrange $args 1 end]};return}

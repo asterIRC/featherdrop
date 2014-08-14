@@ -112,22 +112,7 @@ proc ircmain {sck} {
 }
 
 proc pushmode {chan mode args} {
-	set ctr 0
-	set mctr 1
-	set domode [tnda get "isupport/[ndaenc MODES]"]
-	foreach {c} [split $mode {}] {
-		if {[lsearch -exact $c [tnda get "i/listmodes"]]!=-1 || [lsearch -exact $c [tnda get "i/keymodes"]]!=-1 || [lsearch -exact $c [tnda get "i/limitmodes"]]!=-1} {incr ctr;set usepar 1}
-		switch -glob -- $c {
-			"+" {set state 1}
-			"-" {set state 0}
-			"*" {
-				if {($mctr%4)} {lappend marg [lindex $args $ctr]} {set marg [list [lindex $args $ctr]]}
-				if {($mctr%4)} {append modestate "[expr {$state ? "+" : "-"}]$c"} {set modestate "[expr {$state ? "+" : "-"}]$c"}
-				if {!($mctr%4)} {putq quick "MODE $chan $modestate [join $marg " "]"}
-			}
-		}
-		set usepar 0
-	}
+	putq quick "MODE $chan $mode [join $args " "]"
 }
 
 proc alternick {nick} {

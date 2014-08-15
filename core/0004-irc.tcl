@@ -77,6 +77,8 @@ proc ircmain {sck} {
 
 		"KICK" {
 			callmbinds "kick" [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 0] "[lindex $comd 2] [lindex $comd 3] [join $payload " "]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] [lindex $comd 3] [join $payload " "]
+			tnda set "culist/[ndaenc [lindex $comd 2]]" [luniqb [tnda get "culist/[ndaenc [lindex $comd 2]]"] [lindex $comd 3]]
+
 		}
 		"MODE" {
 			set ctr 3

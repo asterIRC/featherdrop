@@ -324,3 +324,4 @@ set userfile [lindex $::argv 0].user
 
 proc isbotnick {n} {return [expr {$::botnick == $n}]}
 proc ischanban {n c} {return 0}
+proc wasop {n c} {return 0}

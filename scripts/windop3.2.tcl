@@ -451,10 +451,6 @@ proc dop:reguser {nick host hand arg} {
 				return 0
 			}
 		}
-		if {![string match "*@*.*" $email]} {
-			puthelp "NOTICE $nick :[dop:lang $hand 301 ""]"
-			return 0
-		}
 
 		set id "[rand 100000][rand 100000][rand 100000]"
 		adduser $hand

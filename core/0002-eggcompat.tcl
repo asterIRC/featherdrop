@@ -215,6 +215,7 @@ proc deluser {username} {
 
 proc adduser {username {hostmask ""}} {
 	if {[validuser $username]} {return 0}
+	if {[string match "*/*" $username]} {return 0}
 	if {$hostmask != ""} {set moretodo 1} {set moretodo 0}
 	while {0!=$moretodo} {
                 set bindnum [rand 1 10000000]

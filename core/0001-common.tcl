@@ -57,7 +57,6 @@ proc putq {q m} {
 proc pruneq {q t} {
 	after $t "pruneq $q $t"
 	if {[lindex [tnda get "q/$q"] 0]==""} {return}
-	puts stdout [lindex [tnda get "q/$q"] 0]
 	puts $::sock [lindex [tnda get "q/$q"] 0]
 	tnda set "q/$q" [lrange [tnda get "q/$q"] 1 end]
 }

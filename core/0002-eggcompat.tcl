@@ -119,6 +119,14 @@ proc channels {} {
 	return $ret
 }
 
+proc chanlist {chan flags} {
+	set ret [list]
+	foreach {n} [tnda get "culist/[ndaenc $chan]"] {
+		if {[matchattr [nick2hand $n] $flags $chan]||$flags=="-|-"||$flags=="-"} {lappend ret $n}
+	}
+	return $ret
+}
+
 proc onchan {nick {chan "*"}} {
 	if {"*"==$chan} {
 		foreach {chan _} [tnda get "culist"] {
@@ -127,7 +135,7 @@ proc onchan {nick {chan "*"}} {
 			}
 		}
 	} {
-		foreach {n} [tnda get "culist/$chan"] {
+		foreach {n} [tnda get "culist/[ndaenc $chan]"] {
 			if {$n == $nick} {return 1}
 		}
 	}

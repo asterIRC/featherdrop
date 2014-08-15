@@ -276,7 +276,7 @@ proc user-chattr {from msg} {
 	if {""==$chan} {chattr $hand $attrs} {chattr $hand $attrs $chan}
 }
 
-proc nick2hand {nick} {
+proc nick2hand {nick {ch ""}} {
 	foreach {u} [userlist] {
 		foreach {id hm} [nda get "usernames/$u/hostmasks"] {
 			if {[string match $hm [tnda get "userhosts/[ndaenc $nick]"]]} {return $u}
@@ -284,7 +284,7 @@ proc nick2hand {nick} {
 	}
 }
 
-proc hand2nick {nick} {
+proc hand2nick {nick {ch ""}} {
 	foreach {u} [userlist] {
 		foreach {id hm} [tnda get "userhosts"] {
 			if {[string match $hm [nda get "usernames/$u/hostmasks"]]} {return $id}

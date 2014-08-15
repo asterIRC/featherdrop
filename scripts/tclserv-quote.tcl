@@ -54,7 +54,7 @@ proc quoteservdo {n uh h chan t} {
 @<quotelabel> - View quote labelled <quotelabel> (used for factoids)
 End of help for Q.}
 			foreach {helpline} [split $helpfile "\r\n"] {
-				putserv "NOTICE $n :$helpline"
+				puthelp "NOTICE $n :$helpline"
 			}
 		}
 		"vi*" {

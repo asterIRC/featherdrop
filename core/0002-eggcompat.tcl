@@ -20,7 +20,7 @@ proc putserv {msg} {
 }
 
 proc puthelp {msg} {
-	putq help "$msg"
+	putq quick "$msg"
 }
 
 proc putquick {msg} {

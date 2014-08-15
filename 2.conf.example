@@ -1,4 +1,4 @@
-#source /home/j4jackj/windopFULL3.2-0.1BETA/windop3.2.tcl
+#source scripts/windop3.2.tcl
 # Source a script. see above
 #Set your owner user using chattr.
 chattr j4jackj +nmo

@@ -31,13 +31,13 @@ proc owner {nick uh hand to text} {
 proc pong {nick uh hand text} {
 	set ms [lindex [split $text " "] 0]
 	set dest [lindex [split $text " "] 1]
-	#puthelp "NOTICE $nick :Your lag is [expr {[clock clicks -milliseconds] - $ms}] milliseconds according to your client and our measurements."
+	#putserv "NOTICE $nick :Your lag is [expr {[clock clicks -milliseconds] - $ms}] milliseconds according to your client and our measurements."
 	if {![string is integer [string index $ms 0]]} {return}
-	puthelp "PRIVMSG $dest :$nick, your lag is [expr {[clock clicks -milliseconds] - $ms}] milliseconds according to your client and our measurements."
+	putquick "PRIVMSG $dest :$nick, your lag is [expr {[clock clicks -milliseconds] - $ms}] milliseconds according to your client and our measurements."
 }
 
-proc versi {nick uh hand chan text} {
-	puthelp "NOTICE $nick :\001VERSION Jaffabot-TCL 0.1 Jack D. Johnson\001"
+proc versi {nick uh hand text} {
+	putserv "NOTICE $nick :\001VERSION Jaffabot-TCL 0.1 Jack D. Johnson\001"
 }
 
 proc penis {nick uh hand chan text} {
@@ -46,6 +46,6 @@ proc penis {nick uh hand chan text} {
 	scan $rando %c%c%c%c co ct cr cf
 	set penilen [expr {($co * (2 ** 24))+($ct * (2 ** 16))+($cr * (2 ** 8))+($cf)}]
 	close $facto
-	puthelp "PRIVMSG $to :$nick, your penis is [expr {4 + ${penilen} % 36}]cm long according to our measurements."
+	putserv "PRIVMSG $to :$nick, your penis is [expr {4 + ${penilen} % 36}]cm long according to our measurements."
 }
 

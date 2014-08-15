@@ -126,7 +126,7 @@ proc ircmain {sck} {
 		}
 
 		"JOIN" {
-			if {[lindex [split [lindex $comd 0] "!"] 0] == $::botnick} {putq help "WHO [lindex $comd 2]"}
+			if {[lindex [split [lindex $comd 0] "!"] 0] == $::botnick} {putnow "WHO [lindex $comd 2]"}
 			set lis [tnda get "culist/[ndaenc [lindex $comd 2]]"]
 			lappend lis [lindex [split [lindex $comd 0] "!"] 0]
 			tnda set "culist/[ndaenc [lindex $comd 2]]" $lis
@@ -209,7 +209,7 @@ proc checkopmode {n uh h c m t} {
 proc pruneulists {} {
 	foreach {chan ulist} [tnda get "culist"] {
 		tnda set "culist/$chan" [luniq $ulist]
-		if {-1==[lsearch exact $::botnick $ulist]} {puthelp "JOIN [ndadec $chan]"}
+		if {-1==[lsearch -exact $::botnick $ulist]} {puthelp "JOIN [ndadec $chan]"}
 	}
 	after 500 pruneulists
 }

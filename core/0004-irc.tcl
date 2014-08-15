@@ -45,8 +45,12 @@ proc ircmain {sck} {
 		}
 
 		"005" {
+			putnow "CAP REQ :multi-prefix"
 			foreach {tok} [lrange $comd 3 end] {
 				foreach {key val} [split $tok "="] {
+					if {$key == "NAMESX"} {
+						putnow "PROTOCTL NAMESX"
+					}
 					if {$key == "PREFIX"} {
 						set v [string range $val 1 end]
 						set mod [split $v ")"]
@@ -60,7 +64,7 @@ proc ircmain {sck} {
 					}
 					if {$key == "CHANMODES"} {
 						set fields [split $val ","]
-						tnda set "i/listmodes" [concat [split [lindex $fields 0] {}] [tnda get "i/prefixmodes"]]
+						tnda set "i/listmodes" [list {*}[split [lindex $fields 0] {}] {*}[tnda get "i/prefixmodes"]]
 						tnda set "i/keymodes" [split [lindex $fields 1] {}]
 						tnda set "i/limitmodes" [split [lindex $fields 2] {}]
 						tnda set "i/flagmodes" [split [lindex $fields 3] {}]
@@ -76,18 +80,19 @@ proc ircmain {sck} {
 		}
 		"MODE" {
 			set ctr 3
+			puts stdout "$comd"
 			foreach {c} [split [lindex $comd 3] {}] {
-				if {[lsearch -exact $c [tnda get "i/listmodes"]]!=-1 || [lsearch -exact $c [tnda get "i/keymodes"]]!=-1 || [lsearch -exact $c [tnda get "i/limitmodes"]]!=-1} {incr ctr;set usepar 1}
+				if {[lsearch -exact $c [tnda get "i/flagmodes"]]==-1} {set usepar 1}
 				switch -glob -- $c {
 					"+" {set state 1}
 					"-" {set state 0}
-					"*" {callmbinds "mode" [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [expr {$state ? "+" : "-"}]$c" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] "[expr {$state ? "+" : "-"}]$c" "[expr {$usepar ? [lindex $comd $ctr] : ""}]"}
+					"*" {callmbinds "mode" [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [expr {$state ? "+" : "-"}]$c" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] "[expr {$state ? "+" : "-"}]$c" [expr {$usepar ? [lindex $comd [incr ctr]] : ""}]}
 				}
 				set usepar 0
 			}
 		}
 		"353" {
-			foreach {pfx mode} [tnda get "i/prefix"] {
+			foreach {pfx mode} [tnda get "prefix"] {
                                 set pfxmatch($pfx) $mode
                         }
                         foreach {name} $payload {
@@ -96,7 +101,8 @@ proc ircmain {sck} {
                                 foreach {nc} [split $name {}] {
                                         if {[info exists pfxmatch($nc)]} {append no $pfxmatch($nc)} {append nn $nc}
                                 }
-                                if {$no==""} {set no "="}
+				if {$nn==$::botnick} {continue}
+                                if {$no==""} {set no ""}
                                 tnda set "culist/[ndaenc [lindex $comd 4]]" [concat [tnda get "culist/[ndaenc [lindex $comd 4]]"] $nn]
                                 tnda set "oplist/[ndaenc [lindex $comd 4]]/$nn" $no
 			}
@@ -122,6 +128,9 @@ proc ircmain {sck} {
 		}
 
 		"QUIT" {
+			foreach {chan ulist} [tnda get "culist"] {
+				tnda set "culist/$chan" [luniqb $ulist [lindex [split [lindex $comd 0] "!"] 0]]
+			}
 			callmbinds sign [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "* [lindex $comd 0]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] "*" [join $payload " "]
 			tnda set "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]" ""
 		}
@@ -166,4 +175,42 @@ proc doconn {} {
 if {![info exists nick]} {loadconf 1}
 set botnick $nick
 loadconf 2
+
+bind mode -|- "* +*" checkopmode
+
+proc checkopmode {n uh h c m t} {
+	puts stdout "$m"
+	if {[lsearch -exact [tnda get "i/ops"] [string index $m 1]]!=-1||[string index $m 1]=="h"||[string index $m 1]=="v"} {
+		if {[string index $m 0] == "+"} {
+			set mod [tnda get "oplist/[ndaenc $c]/$t"]
+			append mod [string index $m 1]
+		} {
+			set mod [string map [list [string index $m 1] ""] [tnda get "oplist/[ndaenc $c]/$t"]]
+		}
+		puts stdout "$c $m $t $mod"
+		tnda set "oplist/[ndaenc $c]/$t" $mod
+	}
+}
+
+proc pruneulists {} {
+	foreach {chan ulist} [tnda get "culist"] {
+		tnda set "culist/$chan" [luniq $ulist]
+	}
+	after 500 pruneulists
+}
+
+proc luniq {l} {
+	set t [list]
+	foreach i $l {if {[lsearch -exact $t $i]==-1} {lappend t $i}}
+	return $t
+};# RS
+
+proc luniqb {l b} {
+	set t [list]
+	foreach i $l {if {$i != $b&&[lsearch -exact $t $i]==-1} {lappend t $i}}
+	return $t
+};# RS
+
+pruneulists
+
 doconn

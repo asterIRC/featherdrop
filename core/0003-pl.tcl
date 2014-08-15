@@ -3,7 +3,7 @@ namespace eval pl {
 	proc ::pl::accept {chan addr port} {
 		fconfigure $chan -blocking 0 -buffering line
 		fileevent $chan readable [list ::pl::getusername $chan $addr]
-		puts $chan ""
+		puts $chan "\nWhat's your username on $::nick, sir/madam?"
 	}
 
 	proc ::pl::getpassword {chan addr} {
@@ -26,7 +26,7 @@ namespace eval pl {
 
 	proc ::pl::plmain {chan addr} {
 		global partylinememb
-		if {[eof $chan]} {dict set partylinememb $chan 0;callmbinds "chof" "=[tnda get "pline/usernames/$chan"]" "*" "[tnda get "pline/usernames/$chan"]" [tnda get "pline/usernames/$chan"] $chan}
+		if {[eof $chan]} {dict set partylinememb $chan 0;callmbinds "chof" "=[tnda get "pline/usernames/$chan"]" "*" "[tnda get "pline/usernames/$chan"]" [tnda get "pline/usernames/$chan"] $chan; close $chan}
 		gets $chan line
 		set line [string trim $line "\r\n"]
 		set comd [split $line " "]
@@ -79,4 +79,5 @@ proc dcc:chon {handle idx} {
 
 proc dcc:chof {handle idx} {
 	foreach {memb s} $::partylinememb {if {$s && ($memb != $idx)} {putdcc $memb "-!- $handle \[$idx\] has left the party line."}}
+	close $idx
 }

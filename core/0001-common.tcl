@@ -69,9 +69,9 @@ proc putdcc {idx msg} {
 	puts $idx $msg
 }
 
-after 150 {pruneq now 150}
-after 300 {pruneq serv 300}
-after 450 {pruneq quick 450}
-after 600 {pruneq help 600}
+after 300 {pruneq now 150}
+after 600 {pruneq serv 300}
+after 900 {pruneq quick 450}
+after 1200 {pruneq help 600}
 after 12000 {pruneq rejoin 12000}
 set lastbind ""

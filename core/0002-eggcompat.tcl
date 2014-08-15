@@ -309,6 +309,7 @@ proc channame2dname {channame} {return $channame}
 proc islinked {bot} {return [expr {([tnda get "bots/$bot/linked"]!="")&&[tnda get "bots/$bot/linked"]!=0}]}
 after 10000 {
 	foreach {chan} [channels] {
+		puts stdout "$chan"
 		puthelp "JOIN $chan"
 	}
 }

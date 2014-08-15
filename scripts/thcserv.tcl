@@ -40,7 +40,7 @@ proc versi {nick uh hand text} {
 	putserv "NOTICE $nick :\001VERSION Jaffabot-TCL 0.1 Jack D. Johnson\001"
 }
 
-proc penis {nick uh hand chan text} {
+proc penis {nick uh hand to text} {
 	set facto [open /dev/urandom r+]
 	set rando [read $facto 4]
 	scan $rando %c%c%c%c co ct cr cf

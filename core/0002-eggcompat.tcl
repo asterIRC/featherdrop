@@ -119,7 +119,7 @@ proc channels {} {
 	return $ret
 }
 
-proc chanlist {chan flags} {
+proc chanlist {chan {flags "-|-"}} {
 	set ret [list]
 	foreach {n} [tnda get "culist/[ndaenc $chan]"] {
 		if {[matchattr [nick2hand $n] $flags $chan]||$flags=="-|-"||$flags=="-"} {lappend ret $n}
@@ -316,7 +316,14 @@ bind kick -|- "*" kickrejoin
 
 proc kickrejoin {n uh h c t m} {
 	puts stdout "kickrejoin $n $uh $h $c $t $m"
-	if {$t == $::botnick} {puthelp "JOIN $c"}
+	if {$t == $::botnick} {
+		puthelp "JOIN $c"
+		putq rejoin "JOIN $c"
+		putq rejoin "JOIN $c"
+		putq rejoin "JOIN $c"
+		putq rejoin "JOIN $c"
+		putq rejoin "JOIN $c"
+	}
 }
 
 set chanfile [lindex $::argv 0].chan
@@ -325,3 +332,4 @@ set userfile [lindex $::argv 0].user
 proc isbotnick {n} {return [expr {$::botnick == $n}]}
 proc ischanban {n c} {return 0}
 proc wasop {n c} {return 0}
+proc isop {n c} {return [expr {[string match "*o*" [tnda get "oplist/[ndaenc $c]/$n"]]}]}

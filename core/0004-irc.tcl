@@ -24,6 +24,8 @@ proc ircmain {sck} {
 					set lis $ulist
 					lappend lis $nick
 					tnda set "culist/$chan" [luniqb $lis [lindex [split [lindex $comd 0] "!"] 0]]
+					tnda set "oplist/$chan/$nick" [tnda get "oplist/$chan/[lindex [split [lindex $comd 0] "!"] 0]"]
+					tnda set "oplist/$chan/[lindex [split [lindex $comd 0] "!"] 0]" ""
 				}
 			}
 			callmbinds "nick" $nick "*" "* $nick" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand $nick] "*" $nick
@@ -86,6 +88,7 @@ proc ircmain {sck} {
 		"KICK" {
 			callmbinds "kick" [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 0] "[lindex $comd 2] [lindex $comd 3] [join $payload " "]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] [lindex $comd 3] [join $payload " "]
 			tnda set "culist/[ndaenc [lindex $comd 2]]" [luniqb [tnda get "culist/[ndaenc [lindex $comd 2]]"] [lindex $comd 3]]
+			tnda set "oplist/[ndaenc [lindex $comd 2]]/[lindex $comd 3]" ""
 
 		}
 		"MODE" {
@@ -134,6 +137,7 @@ proc ircmain {sck} {
 			set lis [tnda get "culist/[ndaenc [lindex $comd 2]]"]
 			set lis [lreplace $lis [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]] [lsearch -exact $lis [lindex [split [lindex $comd 0] "!"] 0]]]
 			tnda set "culist/[ndaenc [lindex $comd 2]]" $lis
+			tnda set "oplist/[ndaenc [lindex $comd 2]]/[lindex [split [lindex $comd 0] "!"] 0]" ""
 			callmbinds part [lindex [split [lindex $comd 0] "!"] 0] [lindex $comd 2] "[lindex $comd 2] [lindex $comd 0]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex [split [lindex $comd 0] "!"] 0]] [lindex $comd 2] [join $payload " "]
 		}
 
@@ -205,6 +209,7 @@ proc checkopmode {n uh h c m t} {
 proc pruneulists {} {
 	foreach {chan ulist} [tnda get "culist"] {
 		tnda set "culist/$chan" [luniq $ulist]
+		if {-1==[lsearch exact $::botnick $ulist]} {puthelp "JOIN [ndadec $chan]"}
 	}
 	after 500 pruneulists
 }

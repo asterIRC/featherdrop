@@ -73,4 +73,5 @@ after 300 {pruneq now 300}
 after 600 {pruneq serv 600}
 after 900 {pruneq quick 900}
 after 1200 {pruneq help 1200}
+after 12000 {pruneq rejoin 12000}
 set lastbind ""

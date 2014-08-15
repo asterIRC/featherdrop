@@ -16,9 +16,17 @@ proc ircmain {sck} {
 			puts stdout "Server didn't like our nick, choosing a different one."
 		}
 		"NICK" {
-			tnda set "userhosts/[ndaenc [lindex $comd 2]]" [tnda get "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]"]
+			if {[lindex $comd 2] == ""} {set nick [lindex $payload 0]} {set nick [lindex $comd 2]}
+			tnda set "userhosts/[ndaenc $nick]" [tnda get "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]"]
 			tnda set "userhosts/[ndaenc [lindex [split [lindex $comd 0] "!"] 0]]" ""
-			callmbinds "nick" [lindex $comd 2] "*" "* [lindex $comd 2]" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand [lindex $comd 2]] "*" [lindex $comd 2]
+			foreach {chan ulist} [tnda get "culist"] {
+				if {[lsearch -exact [lindex [split [lindex $comd 0] "!"] 0] $ulist]} {
+					set lis $ulist
+					lappend lis $nick
+					tnda set "culist/$chan" [luniqb $lis [lindex [split [lindex $comd 0] "!"] 0]]
+				}
+			}
+			callmbinds "nick" $nick "*" "* $nick" [lindex [split [lindex $comd 0] "!"] 0] [lindex [split [lindex $comd 0] "!"] 1] [nick2hand $nick] "*" $nick
 		}
 
 		"PRIVMSG" {

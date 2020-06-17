@@ -9,7 +9,7 @@
          Featherdrop. It's the bot of the 21st century. Are you ready?
 
    Featherdrop has not had a long history. It has however been developed very
-                      expertly by one young lad, j4jackj.
+                     expertly by one young lass, Ellenor.
 
   The bot is mainly an attempt at seeing what can be done in pure Tcl, but has
          been released to the general public for review and public use.
@@ -20,7 +20,7 @@
                     - ~60% compatibility with eggdrop scripts
                               - Works with bmotion
   - Bundles a useful channel "service" script made by the wonderful N3X (dunno
-             if that is his ircname, just read the fucking source)
+                  if that is his ircname, just read the source)
               - Parses 005 for a perfect configuration every time.
    - Potentially supports cap multi-prefix (hasn't been added to the 005 code
   yet, but could certainly be added to the post-init script *.2 where * is the
